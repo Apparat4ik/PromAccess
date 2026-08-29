@@ -1,0 +1,31 @@
+name: CI Tests
+
+# Запуск будет происходить при каждом push в ветку main
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Копирование репозитория
+      uses: actions/checkout@v3
+
+    - name: Настройка Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Установка зависимостей
+      run: |
+        cd ASU_TP_backend
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest httpx
+
+    - name: Запуск автотестов
+      run: |
+        cd ASU_TP_backend
+        pytest
