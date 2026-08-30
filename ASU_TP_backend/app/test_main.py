@@ -3,8 +3,11 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
-from app.main import app, get_db, Base, Role, Equipment, User, get_password_hash
-from app.core.config import SECRET_KEY # Убедись, что импорт конфигурации корректный
+from app.main import app
+from app.core.dependencies import get_db
+from app.core.security import get_password_hash
+from app.db.db_connect import Base
+from app.db.models import Role, Equipment, User
 
 # Настройка изолированной тестовой базы данных SQLite
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.sqlite"
