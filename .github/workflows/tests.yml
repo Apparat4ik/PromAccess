@@ -26,6 +26,11 @@ jobs:
         pip install pytest httpx
 
     - name: Запуск автотестов
+      env:
+            DATABASE_URL: "sqlite:///./test_db.sqlite"
+            SECRET_KEY: "super_secret_test_key"
+            ALGORITHM: "HS256"
+            ACCESS_TOKEN_EXPIRE_MINUTES: "30"
       run: |
         cd ASU_TP_backend
         pytest

@@ -7,7 +7,7 @@ from app.schemas.request import RequestCreate, RequestStatusUpdate, RequestRespo
 
 router = APIRouter()
 
-@router.post("/", response_model=RequestResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=RequestResponse, status_code=status.HTTP_201_CREATED)
 def create_request(request_data: RequestCreate, request: Request, current_user: User = Depends(require_role(["ENGINEER"])), db: Session = Depends(get_db)):
     """Создание заявки на доступ (Только для Инженера)"""
     if request_data.start_time >= request_data.end_time:
@@ -44,7 +44,7 @@ def update_request_status(req_id: int, status_update: RequestStatusUpdate, reque
     log_audit(db, request, action=f"STATUS_CHANGED_{old_status}_TO_{status_update.status}", entity_type="access_requests", entity_id=db_req.id, user_id=current_user.id)
     return db_req
 
-@router.get("/", response_model=List[RequestResponse])
+@router.get("", response_model=List[RequestResponse])
 def get_requests(current_user: User = Depends(get_current_user), db: Session = Depends(get_db)):
     """Получение списка заявок. Инженер видит только свои, ИБ/Админ - все."""
     role = db.query(Role).filter(Role.id == current_user.role_id).first()

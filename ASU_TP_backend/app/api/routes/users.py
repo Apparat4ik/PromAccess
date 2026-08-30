@@ -6,7 +6,7 @@ from app.schemas.request import RoleUpdateRequest
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("")
 def get_all_users(
     current_user: User = Depends(require_role(["ADMIN"])), 
     db: Session = Depends(get_db)

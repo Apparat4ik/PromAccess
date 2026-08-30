@@ -8,7 +8,7 @@ from app.db.models import AuditLog
 router = APIRouter()
 
 #  Получение всего журнала действий (только для Администратора)
-@router.get("/", response_model=List[AuditLogResponse])
+@router.get("", response_model=List[AuditLogResponse])
 def get_all_logs(
     limit: int = 100, 
     skip: int = 0, 
