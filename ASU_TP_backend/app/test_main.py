@@ -219,7 +219,7 @@ def test_delete_request():
     request_id = req_response.json()["id"]
 
     delete_response = client.delete(f"/api/requests/{request_id}", headers=eng_headers)
-    assert delete_response.status_code == 200
+    assert delete_response.status_code == 204
 
     # Проверка, что заявка действительно удалена из общего списка
     get_response = client.get("/api/requests", headers=eng_headers)
