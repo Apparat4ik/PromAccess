@@ -8,6 +8,7 @@ from app.core.dependencies import get_db
 from app.core.security import get_password_hash
 from app.db.db_connect import Base
 from app.db.models import Role, Equipment, User
+from app.core.dependencies import rate_limit_login
 
 # Настройка изолированной тестовой базы данных SQLite
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_db.sqlite"
@@ -24,6 +25,7 @@ def override_get_db():
 
 app.dependency_overrides[get_db] = override_get_db
 client = TestClient(app)
+app.dependency_overrides[rate_limit_login] = lambda: None
 
 # Подготовка БД перед каждым тестом
 @pytest.fixture(autouse=True)
@@ -66,8 +68,6 @@ def test_register_admin_forbidden():
     assert response.status_code == 403
 
 def test_login_success():
-    """Тест успешного входа и получения JWT токена"""
-    # Сначала регистрируем
     client.post(
         "/api/auth/register",
         json={"email": "login_test@example.com", "password": "password123", "role_name": "USER"}
@@ -138,7 +138,7 @@ def test_create_request():
     }
     
     response = client.post("/api/requests", json=payload, headers=headers)
-    assert response.status_code == 200
+    assert response.status_code == 201
     
     data = response.json()
     assert data["reason"] == "Тестовое обслуживание"
