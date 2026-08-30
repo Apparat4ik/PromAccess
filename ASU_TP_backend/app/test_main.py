@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
-from main import app, get_db, Base, Role, Equipment, User, get_password_hash
+from app.main import app, get_db, Base, Role, Equipment, User, get_password_hash
 from app.core.config import SECRET_KEY # Убедись, что импорт конфигурации корректный
 
 # Настройка изолированной тестовой базы данных SQLite
