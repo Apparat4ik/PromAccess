@@ -1,8 +1,7 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install @mantine/core @mantine/hooks @mantine/notifications @mantine/form @tabler/icons-react axios react-router-dom jwt-decode
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 
