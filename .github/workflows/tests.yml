@@ -57,7 +57,7 @@ jobs:
         - name: Build and push Frontend
           uses: docker/build-push-action@v4
           with:
-            context: ./ASY_TP_frontend
+            context: ./ASU_TP_frontend
             push: true
             tags: ${{ secrets.DOCKER_USERNAME }}/asu_frontend:latest
 
