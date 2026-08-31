@@ -13,11 +13,11 @@ const Register = () => {
     initialValues: {
       email: '',
       password: '',
-      role_name: 'USER', // Значение по умолчанию
+      role_name: 'USER',
     },
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Неверный формат email'),
-      password: (value) => (value.length < 6 ? 'Пароль должен быть не менее 6 символов' : null),
+      password: (value) => (value.length < 8 ? 'Пароль должен быть не менее 8 символов' : null),
       role_name: (value) => (value ? null : 'Выберите роль'),
     },
   });
