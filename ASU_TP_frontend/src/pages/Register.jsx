@@ -62,9 +62,7 @@ const Register = () => {
               placeholder="Выберите роль"
               data={[
                 { value: 'USER', label: 'Пользователь' },
-                { value: 'ENGINEER', label: 'Инженер' },
-                { value: 'SECURITY_OFFICER', label: 'Специалист ИБ' },
-                { value: 'ADMIN', label: 'Администратор' },
+                { value: 'ENGINEER', label: 'Инженер' }
               ]}
               required
               {...form.getInputProps('role_name')}
