@@ -10,7 +10,11 @@ const ProtectedRoute = ({ allowedRoles }) => {
     return <Navigate to="/login" replace />;
   }
 
-  // 2. Ограничение интерфейса по ролям
+  // Перенаправление гостя на страницу ожидания
+  if (user.role === 'USER') {
+    return <Navigate to="/waiting-room" replace />;
+  }
+
   // Если для маршрута указаны роли, и текущая роль пользователя в них не входит
   if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/dashboard" replace />;

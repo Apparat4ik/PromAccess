@@ -13,34 +13,25 @@ router = APIRouter()
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 def register(user_data: UserCreate, db: Session = Depends(get_db)):
-    # Запрещаем открытую регистрацию администраторов и безопасников
-    if user_data.role_name in ["ADMIN", "SECURITY_OFFICER"]:
-        raise HTTPException(
-            status_code=403, 
-            detail="Регистрация с привилегированными ролями запрещена. Обратитесь к администратору."
-        )
-    
-    # Валидация входных данных: разрешаем регистрировать только USER или ENGINEER
-    if user_data.role_name not in ["USER", "ENGINEER"]:
-        user_data.role_name = "USER" # Защита от ввода несуществующих ролей
-
-    # Создание роли, если её нет
-    role = db.query(Role).filter(Role.name == user_data.role_name).first()
-    if not role:
-        role = Role(name=user_data.role_name, description="Автосозданная базовая роль")
-        db.add(role)
-        db.commit()
-        db.refresh(role)
-        
-    db_user = db.query(User).filter(User.email == user_data.email).first()
-    if db_user:
+    existing_user = db.query(User).filter(User.email == user_data.email).first()
+    if existing_user:
         raise HTTPException(status_code=400, detail="Email уже зарегистрирован")
-        
-    hashed_password = get_password_hash(user_data.password)
-    new_user = User(email=user_data.email, password_hash=hashed_password, role_id=role.id)
+
+    default_role = db.query(Role).filter(Role.name == "USER").first()
+    if not default_role:
+        raise HTTPException(status_code=500, detail="Системная ошибка: базовая роль не найдена")
+
+    # Создаем пользователя с гостевой ролью
+    new_user = User(
+        email=user_data.email,
+        password_hash=get_password_hash(user_data.password),
+        role_id=default_role.id
+    )
     db.add(new_user)
     db.commit()
-    return {"detail": "Пользователь успешно зарегистрирован"}
+    db.refresh(new_user)
+
+    return new_user
 
 @router.post("/login", response_model=TokenResponse)
 def login(request: Request, response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db), _: None = Depends(rate_limit_login)):

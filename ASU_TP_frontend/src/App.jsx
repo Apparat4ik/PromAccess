@@ -1,9 +1,9 @@
-import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import GuestWaitingRoom from './pages/GuestRoom';
 
 import '@mantine/core/styles.css';
 import '@mantine/notifications/styles.css';
@@ -25,6 +25,7 @@ function App() {
             {/* Публичные маршруты */}
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/waiting-room" element={<GuestWaitingRoom />} />
 
             {/* Защищенные маршруты */}
             <Route element={<ProtectedRoute />}>

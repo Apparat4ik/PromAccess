@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { TextInput, PasswordInput, Button, Paper, Title, Container, Stack, Select, Text } from '@mantine/core';
 import { useForm } from '@mantine/form';
@@ -12,8 +12,7 @@ const Register = () => {
   const form = useForm({
     initialValues: {
       email: '',
-      password: '',
-      role_name: 'USER',
+      password: ''
     },
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : 'Неверный формат email'),
@@ -57,16 +56,6 @@ const Register = () => {
           <Stack>
             <TextInput label="Email" placeholder="ваша@почта.ru" required {...form.getInputProps('email')} />
             <PasswordInput label="Пароль" placeholder="Ваш пароль" required {...form.getInputProps('password')} />
-            <Select
-              label="Роль в системе"
-              placeholder="Выберите роль"
-              data={[
-                { value: 'USER', label: 'Пользователь' },
-                { value: 'ENGINEER', label: 'Инженер' }
-              ]}
-              required
-              {...form.getInputProps('role_name')}
-            />
             <Button type="submit" fullWidth mt="xl" loading={loading}>Зарегистрироваться</Button>
           </Stack>
         </form>
