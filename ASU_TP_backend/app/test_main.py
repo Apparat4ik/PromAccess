@@ -43,37 +43,43 @@ def setup_db():
 
 # Сами тесты
 def test_register_user():
-    """Тест успешной регистрации пользователя"""
     response = client.post(
         "/api/auth/register",
         json={
             "email": "test@example.com", 
-            "password": "password123", 
-            "role_name": "USER"
+            "password": "password123" 
         }
     )
     assert response.status_code == 201
     assert response.json() == {"detail": "Пользователь успешно зарегистрирован"}
 
 def test_register_admin_forbidden():
-    """Тест защиты от открытой регистрации администраторов"""
     response = client.post(
         "/api/auth/register",
         json={
             "email": "hacker@example.com", 
             "password": "password123", 
-            "role_name": "ADMIN"
+            "role_name": "ADMIN" 
         }
     )
-    assert response.status_code == 403
+    
+    assert response.status_code in [201, 422]
+    
+    if response.status_code == 201:
+        db = TestingSessionLocal()
+        user = db.query(User).filter(User.email == "hacker@example.com").first()
+        role = db.query(Role).filter(Role.id == user.role_id).first()
+        
+        # Убеждаемся, что система принудительно назначила базовую роль
+        assert role.name == "USER"
+        db.close()
 
 def test_login_success():
     client.post(
         "/api/auth/register",
-        json={"email": "login_test@example.com", "password": "password123", "role_name": "USER"}
+        json={"email": "login_test@example.com", "password": "password123"}
     )
     
-    # Пытаемся войти (FastAPI OAuth2 требует передачи данных через form-data, а не json)
     response = client.post(
         "/api/auth/login",
         data={"username": "login_test@example.com", "password": "password123"}
