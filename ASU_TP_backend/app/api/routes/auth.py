@@ -31,7 +31,7 @@ def register(user_data: UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
-    return new_user
+    return {"detail": "Пользователь успешно зарегистрирован"}
 
 @router.post("/login", response_model=TokenResponse)
 def login(request: Request, response: Response, form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db), _: None = Depends(rate_limit_login)):
